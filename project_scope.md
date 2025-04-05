@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-SecAI is an agentic AI system built on AWS Bedrock that analyzes system documentation and logs to identify security vulnerabilities, investigate potential breaches, and provide actionable security insights. The system leverages multiple specialized AI agents working together to perform comprehensive security analysis.
+Sherlock is an agentic AI system built on AWS Bedrock that analyzes system documentation and logs to identify security vulnerabilities, investigate potential breaches, and provide actionable security insights. The system leverages multiple specialized AI agents working together to perform comprehensive security analysis.
 
 ## System Architecture
 
@@ -317,6 +317,6 @@ For optimal performance across different components, we recommend the following 
 
 ## Conclusion
 
-The SecAI system architecture provides a comprehensive approach to security analysis using agentic AI powered by AWS Bedrock. By leveraging multiple specialized agents, the system can analyze documentation, logs, and create investigation trees to provide valuable security insights.
+The Sherlock system architecture provides a comprehensive approach to security analysis using agentic AI powered by AWS Bedrock. By leveraging multiple specialized agents, the system can analyze documentation, logs, and create investigation trees to provide valuable security insights.
 
 The implementation roadmap is designed for rapid development in a hackathon environment, with a focus on creating a visually impressive and functional prototype that showcases the integration of AWS services and AI capabilities.
