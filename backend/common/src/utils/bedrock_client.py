@@ -72,23 +72,43 @@ class BedrockClient:
         """
         try:
             # Prepare the payload based on the model provider
-            if model_id.startswith("anthropic.claude"):
+            # Use Messages API for Claude 3+ models, legacy for older ones
+            if model_id.startswith("anthropic.claude-3"):
+                # Claude 3+ Messages API format
                 payload = {
-                    "prompt": f"\n\nHuman: {prompt}\n\nAssistant:",
-                    "max_tokens_to_sample": max_tokens,
+                    "anthropic_version": "bedrock-2023-05-31",
+                    "max_tokens": max_tokens,
                     "temperature": temperature,
                     "top_p": top_p,
-                    "top_k": top_k
+                    "top_k": top_k,
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
+                    ]
                 }
+                logger.info(f"Using Messages API format for Claude 3 model: {model_id}")
+            elif model_id.startswith("anthropic.claude"):
+                 # Legacy Claude format (e.g., Claude 2.x)
+                 payload = {
+                     "prompt": f"\n\nHuman: {prompt}\n\nAssistant:",
+                     "max_tokens_to_sample": max_tokens,
+                     "temperature": temperature,
+                     "top_p": top_p,
+                     "top_k": top_k
+                 }
+                 logger.info(f"Using legacy prompt format for Claude model: {model_id}")
             else:
-                # Default payload structure (can be extended for other models)
+                # Default payload structure for other models (adjust if needed)
                 payload = {
                     "prompt": prompt,
                     "max_tokens": max_tokens,
                     "temperature": temperature,
                     "top_p": top_p
                 }
-                
+                logger.info(f"Using default prompt format for model: {model_id}")
+
             body = json.dumps(payload)
             
             response = self.bedrock_runtime.invoke_model(
@@ -104,11 +124,26 @@ class BedrockClient:
             logger.info(f"Raw response from {model_id}: {response_body}")
             
             # Extract the generated text based on the model provider
-            if model_id.startswith("anthropic.claude"):
-                generated_text = response_body.get('completion', '')
+            # Extract the generated text based on the model provider and API format
+            if model_id.startswith("anthropic.claude-3"):
+                # Claude 3+ Messages API response format
+                generated_text = ""
+                if response_body.get("content") and isinstance(response_body["content"], list):
+                    for block in response_body["content"]:
+                        if block.get("type") == "text":
+                            generated_text = block.get("text", "")
+                            break
+                else:
+                     logger.warning(f"Unexpected Claude 3 response format: {response_body}")
+                     generated_text = str(response_body) # Fallback
+            elif model_id.startswith("anthropic.claude"):
+                 # Legacy Claude response format
+                 generated_text = response_body.get('completion', '')
             else:
-                # Default extraction (can be extended for other models)
-                generated_text = response_body.get('generated_text', '')
+                # Default extraction (adjust as needed for other models)
+                generated_text = response_body.get('generated_text', '') or \
+                                 response_body.get('completion', '') or \
+                                 str(response_body) # Fallback
             
             # Log the response for debugging
             logger.info(f"Model response from {model_id}: {generated_text}")

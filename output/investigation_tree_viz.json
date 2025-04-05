@@ -1,5 +1,5 @@
 {
-  "id": "0523b3a0-c7fa-486e-a3be-07f4f0d10064",
+  "id": "cfda8a7f-5366-4c52-a02a-5a8cb531ea29",
   "title": "Initial Breach",
   "type": "root",
   "description": "Unauthorized access detected to the customer database server. The server logs show multiple failed login attempts followed by a successful login from an IP address not associated with our organization. The attacker appears to have exfiltrated customer data including names, email addresses, and hashed passwords.",
@@ -9,119 +9,119 @@
   "metadata": {},
   "children": [
     {
-      "id": "5a4e7ffa-b3ff-4c32-8acb-411941241e7d",
-      "title": "Credential Stuffing and Password Cracking",
+      "id": "b1946ae0-4e45-4c5e-9ac5-a0dffd5e895e",
+      "title": "Password Hash Cracking Attempt",
       "type": "attack_vector",
-      "description": "The attacker used the exfiltrated hashed passwords to attempt credential stuffing and password cracking across other systems, potentially leveraging the stolen email addresses.",
+      "description": "The attacker will attempt to crack the stolen password hashes to gain additional authentication credentials and potentially expand access to other systems",
       "status": "plausible",
       "confidence": 0.85,
       "evidence": [
-        "Hashed password database was compromised",
-        "Multiple failed login attempts in initial breach",
-        "Common password reuse patterns"
+        "Exfiltrated hashed password data",
+        "Common post-breach reconnaissance technique",
+        "High potential for lateral movement"
       ],
       "metadata": {
-        "reasoning": "Given the successful database access and customer data theft, the next logical step would be to exploit the stolen credentials. Attackers often use password cracking tools and techniques to break hashed passwords, then attempt to use these credentials on other platforms."
+        "reasoning": "With customer password hashes obtained, attackers typically use offline cracking techniques like dictionary attacks, rainbow tables, or GPU-accelerated brute force to recover plaintext credentials. Weak or reused passwords increase the likelihood of successful cracking."
       },
       "children": [
         {
-          "id": "46d01f26-f026-473c-a132-0de8adad7d87",
-          "title": "Targeted Phishing Campaign Using Stolen Customer Data",
+          "id": "31edd307-cc0c-471d-8a5f-b0af7a29e2e3",
+          "title": "Credential Stuffing and Password Cracking",
           "type": "attack_vector",
-          "description": "The attacker leverages the exfiltrated customer names and email addresses to launch a sophisticated spear-phishing campaign, attempting to trick customers into revealing additional credentials or installing malware",
+          "description": "The attacker uses offline password cracking techniques like rainbow tables, dictionary attacks, or GPU-accelerated brute force to crack the stolen password hashes, targeting weak or reused credentials.",
           "status": "confirmed",
           "confidence": 0.85,
           "evidence": [
-            "Stolen email addresses and personal information",
-            "High potential for social engineering",
-            "Low detection likelihood"
+            "Large-scale data breaches often involve password hash cracking",
+            "Many users reuse passwords across multiple platforms",
+            "Advanced password cracking tools are readily available"
           ],
           "metadata": {
-            "reasoning": "With customer email addresses and names, attackers can craft highly personalized phishing emails that appear legitimate, increasing the likelihood of successful credential theft or malware installation"
+            "reasoning": "With stolen password hashes, attackers can systematically attempt to recover plaintext passwords using computational techniques, potentially revealing credentials that grant access to other systems or user accounts."
           }
         },
         {
-          "id": "bcca3768-520a-4ede-a6f9-4439e96a09fe",
-          "title": "Dark Web Sale of Customer Database",
-          "type": "impact",
-          "description": "The attacker prepares to monetize the stolen customer data by listing the database for sale on underground cybercrime marketplaces, potentially attracting other threat actors",
-          "status": "unverified",
-          "confidence": 0.72,
-          "evidence": [
-            "Presence of personal identifiable information (PII)",
-            "Historical precedent of data monetization",
-            "Active underground markets for stolen data"
-          ],
-          "metadata": {
-            "reasoning": "Stolen databases with customer information have significant black market value, and cybercriminals frequently trade such data for financial gain"
-          }
-        }
-      ]
-    },
-    {
-      "id": "14a5e00c-79f6-4e8d-885d-7ef9cf3f22c5",
-      "title": "Lateral Movement within Network",
-      "type": "attack_vector",
-      "description": "The attacker is likely attempting to escalate privileges and move laterally through the organization's network, seeking additional high-value targets and sensitive systems.",
-      "status": "plausible",
-      "confidence": 0.75,
-      "evidence": [
-        "External IP address used in initial breach",
-        "Successful database server penetration",
-        "Typical advanced persistent threat (APT) methodology"
-      ],
-      "metadata": {
-        "reasoning": "After gaining initial access and exfiltrating customer data, sophisticated attackers typically seek to expand their foothold within the network, looking for more critical systems and potential long-term access."
-      },
-      "children": [
-        {
-          "id": "c9416118-6643-4e56-a92a-735d7bed7a59",
-          "title": "Active Directory Privilege Escalation",
+          "id": "4d053a60-6b98-4e9d-9c3b-00575497ce64",
+          "title": "Lateral Movement via Compromised Credentials",
           "type": "attack_vector",
-          "description": "The attacker leverages stolen credentials to gain access to the Active Directory domain controller, potentially using techniques like Kerberoasting or exploiting misconfigured group policies to escalate domain admin privileges.",
-          "status": "unverified",
-          "confidence": 0.85,
-          "evidence": [
-            "Multiple failed login attempts suggest reconnaissance",
-            "Initial database server compromise provides initial foothold",
-            "Common lateral movement technique in enterprise networks"
-          ],
-          "metadata": {
-            "reasoning": "After gaining initial database access, sophisticated attackers typically seek to expand their network control by targeting centralized authentication systems like Active Directory. This allows broader system access and persistence."
-          }
-        },
-        {
-          "id": "740f9854-6e94-48b7-a121-c8965f3b2d98",
-          "title": "Credential Harvesting via Network Scanning",
-          "type": "attack_vector",
-          "description": "Using the compromised database server as a pivot point, the attacker conducts internal network reconnaissance and scans for additional vulnerable systems, collecting credentials and mapping the network infrastructure.",
+          "description": "After successfully cracking some password hashes, the attacker uses the recovered credentials to gain unauthorized access to additional internal systems, escalating privileges and expanding their network foothold.",
           "status": "unverified",
           "confidence": 0.75,
           "evidence": [
-            "Successful login from unauthorized IP",
-            "Typical post-exploitation reconnaissance behavior",
-            "Customer data exfiltration indicates methodical approach"
+            "Common post-breach technique for expanding access",
+            "Enterprises often have interconnected authentication systems",
+            "Password reuse is prevalent across organizations"
           ],
           "metadata": {
-            "reasoning": "The attacker has demonstrated technical capability and is likely methodically exploring the network to identify additional entry points and high-value targets for further compromise."
+            "reasoning": "Successfully cracked credentials can provide pathways to additional systems, especially if users have similar passwords across different platforms or if single sign-on mechanisms are in place."
           }
         }
       ]
     },
     {
-      "id": "69438376-8bb7-4e49-b711-6a039e71ea7f",
-      "title": "Preparation for Ransomware Deployment",
+      "id": "3d397594-e8d7-4b87-8aa4-3c8bd9a9cdc9",
+      "title": "Customer Account Takeover Campaign",
       "type": "impact",
-      "description": "The database breach may be a precursor to a broader ransomware attack, with the attacker mapping network resources and preparing for widespread encryption and extortion.",
-      "status": "confirmed",
-      "confidence": 0.65,
+      "description": "Leveraging the stolen customer data, the attacker will attempt to conduct large-scale phishing or credential stuffing attacks to compromise individual user accounts",
+      "status": "plausible",
+      "confidence": 0.75,
       "evidence": [
-        "Customer data exfiltration suggests reconnaissance",
-        "Recent trend of data theft preceding ransomware attacks",
-        "Potential financial motivation"
+        "Personal customer information available",
+        "Email addresses in the dataset",
+        "High economic motivation for identity theft"
       ],
       "metadata": {
-        "reasoning": "The initial breach demonstrates the attacker's capability and intent. By stealing customer data and potentially mapping network resources, they might be setting the stage for a more destructive ransomware deployment aimed at financial extortion."
+        "reasoning": "The combination of names and email addresses provides an ideal dataset for targeted phishing campaigns. Attackers can craft convincing emails attempting to trick users into revealing additional credentials or installing malware."
+      },
+      "children": [
+        {
+          "id": "b4a9cdfa-b3e0-459e-953a-cb6a90bbafd4",
+          "title": "Dark Web Data Monetization",
+          "type": "attack_vector",
+          "description": "The attacker plans to sell the exfiltrated customer database on underground cybercrime forums, potentially targeting financial or identity theft markets",
+          "status": "unverified",
+          "confidence": 0.85,
+          "evidence": [
+            "High volume of customer PII data obtained",
+            "Presence of email addresses and hashed passwords",
+            "Known patterns of cybercriminal marketplaces"
+          ],
+          "metadata": {
+            "reasoning": "Stolen customer databases with personal information are valuable commodities in cybercrime ecosystems. The combination of names, emails, and password hashes provides sufficient data for potential identity theft or account compromise schemes."
+          }
+        },
+        {
+          "id": "0fd883a1-b699-4fff-bb79-2eb73852fdc6",
+          "title": "Targeted Spear Phishing Campaign",
+          "type": "attack_vector",
+          "description": "Using the stolen customer data, the attacker will craft highly personalized phishing emails targeting specific high-value individuals within the compromised database",
+          "status": "unverified",
+          "confidence": 0.75,
+          "evidence": [
+            "Comprehensive customer information available",
+            "Presence of email addresses in exfiltrated data",
+            "Increasing trend of sophisticated social engineering attacks"
+          ],
+          "metadata": {
+            "reasoning": "With detailed customer information, attackers can create convincing, personalized phishing emails that appear legitimate and increase the likelihood of successful social engineering attacks. The targeted approach allows for more precise manipulation of potential victims."
+          }
+        }
+      ]
+    },
+    {
+      "id": "223c8da1-b77a-44ba-92eb-b79706933342",
+      "title": "Infrastructure Reconnaissance",
+      "type": "attack_vector",
+      "description": "The attacker will use the initial database access as a foothold to perform broader network reconnaissance and identify additional vulnerable systems",
+      "status": "confirmed",
+      "confidence": 0.8,
+      "evidence": [
+        "Successful database server penetration",
+        "Potential internal network access",
+        "Typical advanced persistent threat methodology"
+      ],
+      "metadata": {
+        "reasoning": "After gaining initial access, sophisticated attackers typically conduct systematic exploration of the network, mapping potential lateral movement paths, identifying privileged accounts, and searching for additional high-value targets."
       }
     }
   ]
