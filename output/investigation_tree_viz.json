@@ -1,5 +1,5 @@
 {
-  "id": "5617eae2-a3f3-47d1-8037-225a548f03fe",
+  "id": "0523b3a0-c7fa-486e-a3be-07f4f0d10064",
   "title": "Initial Breach",
   "type": "root",
   "description": "Unauthorized access detected to the customer database server. The server logs show multiple failed login attempts followed by a successful login from an IP address not associated with our organization. The attacker appears to have exfiltrated customer data including names, email addresses, and hashed passwords.",
@@ -9,34 +9,120 @@
   "metadata": {},
   "children": [
     {
-      "id": "658ff3ad-4ad1-4592-b271-88f880ca5004",
-      "title": "Fallback Hypothesis",
+      "id": "5a4e7ffa-b3ff-4c32-8acb-411941241e7d",
+      "title": "Credential Stuffing and Password Cracking",
       "type": "attack_vector",
-      "description": "This is a fallback hypothesis generated because Bedrock models are not accessible.",
+      "description": "The attacker used the exfiltrated hashed passwords to attempt credential stuffing and password cracking across other systems, potentially leveraging the stolen email addresses.",
       "status": "plausible",
-      "confidence": 0.5,
+      "confidence": 0.85,
       "evidence": [
-        "No Bedrock access"
+        "Hashed password database was compromised",
+        "Multiple failed login attempts in initial breach",
+        "Common password reuse patterns"
       ],
       "metadata": {
-        "reasoning": "This is a fallback response due to Bedrock access issues."
+        "reasoning": "Given the successful database access and customer data theft, the next logical step would be to exploit the stolen credentials. Attackers often use password cracking tools and techniques to break hashed passwords, then attempt to use these credentials on other platforms."
       },
       "children": [
         {
-          "id": "eaa0126f-7a32-4cdc-83b2-2ef55022e86e",
-          "title": "Fallback Hypothesis",
+          "id": "46d01f26-f026-473c-a132-0de8adad7d87",
+          "title": "Targeted Phishing Campaign Using Stolen Customer Data",
           "type": "attack_vector",
-          "description": "This is a fallback hypothesis generated because Bedrock models are not accessible.",
-          "status": "unverified",
-          "confidence": 0.5,
+          "description": "The attacker leverages the exfiltrated customer names and email addresses to launch a sophisticated spear-phishing campaign, attempting to trick customers into revealing additional credentials or installing malware",
+          "status": "confirmed",
+          "confidence": 0.85,
           "evidence": [
-            "No Bedrock access"
+            "Stolen email addresses and personal information",
+            "High potential for social engineering",
+            "Low detection likelihood"
           ],
           "metadata": {
-            "reasoning": "This is a fallback response due to Bedrock access issues."
+            "reasoning": "With customer email addresses and names, attackers can craft highly personalized phishing emails that appear legitimate, increasing the likelihood of successful credential theft or malware installation"
+          }
+        },
+        {
+          "id": "bcca3768-520a-4ede-a6f9-4439e96a09fe",
+          "title": "Dark Web Sale of Customer Database",
+          "type": "impact",
+          "description": "The attacker prepares to monetize the stolen customer data by listing the database for sale on underground cybercrime marketplaces, potentially attracting other threat actors",
+          "status": "unverified",
+          "confidence": 0.72,
+          "evidence": [
+            "Presence of personal identifiable information (PII)",
+            "Historical precedent of data monetization",
+            "Active underground markets for stolen data"
+          ],
+          "metadata": {
+            "reasoning": "Stolen databases with customer information have significant black market value, and cybercriminals frequently trade such data for financial gain"
           }
         }
       ]
+    },
+    {
+      "id": "14a5e00c-79f6-4e8d-885d-7ef9cf3f22c5",
+      "title": "Lateral Movement within Network",
+      "type": "attack_vector",
+      "description": "The attacker is likely attempting to escalate privileges and move laterally through the organization's network, seeking additional high-value targets and sensitive systems.",
+      "status": "plausible",
+      "confidence": 0.75,
+      "evidence": [
+        "External IP address used in initial breach",
+        "Successful database server penetration",
+        "Typical advanced persistent threat (APT) methodology"
+      ],
+      "metadata": {
+        "reasoning": "After gaining initial access and exfiltrating customer data, sophisticated attackers typically seek to expand their foothold within the network, looking for more critical systems and potential long-term access."
+      },
+      "children": [
+        {
+          "id": "c9416118-6643-4e56-a92a-735d7bed7a59",
+          "title": "Active Directory Privilege Escalation",
+          "type": "attack_vector",
+          "description": "The attacker leverages stolen credentials to gain access to the Active Directory domain controller, potentially using techniques like Kerberoasting or exploiting misconfigured group policies to escalate domain admin privileges.",
+          "status": "unverified",
+          "confidence": 0.85,
+          "evidence": [
+            "Multiple failed login attempts suggest reconnaissance",
+            "Initial database server compromise provides initial foothold",
+            "Common lateral movement technique in enterprise networks"
+          ],
+          "metadata": {
+            "reasoning": "After gaining initial database access, sophisticated attackers typically seek to expand their network control by targeting centralized authentication systems like Active Directory. This allows broader system access and persistence."
+          }
+        },
+        {
+          "id": "740f9854-6e94-48b7-a121-c8965f3b2d98",
+          "title": "Credential Harvesting via Network Scanning",
+          "type": "attack_vector",
+          "description": "Using the compromised database server as a pivot point, the attacker conducts internal network reconnaissance and scans for additional vulnerable systems, collecting credentials and mapping the network infrastructure.",
+          "status": "unverified",
+          "confidence": 0.75,
+          "evidence": [
+            "Successful login from unauthorized IP",
+            "Typical post-exploitation reconnaissance behavior",
+            "Customer data exfiltration indicates methodical approach"
+          ],
+          "metadata": {
+            "reasoning": "The attacker has demonstrated technical capability and is likely methodically exploring the network to identify additional entry points and high-value targets for further compromise."
+          }
+        }
+      ]
+    },
+    {
+      "id": "69438376-8bb7-4e49-b711-6a039e71ea7f",
+      "title": "Preparation for Ransomware Deployment",
+      "type": "impact",
+      "description": "The database breach may be a precursor to a broader ransomware attack, with the attacker mapping network resources and preparing for widespread encryption and extortion.",
+      "status": "confirmed",
+      "confidence": 0.65,
+      "evidence": [
+        "Customer data exfiltration suggests reconnaissance",
+        "Recent trend of data theft preceding ransomware attacks",
+        "Potential financial motivation"
+      ],
+      "metadata": {
+        "reasoning": "The initial breach demonstrates the attacker's capability and intent. By stealing customer data and potentially mapping network resources, they might be setting the stage for a more destructive ransomware deployment aimed at financial extortion."
+      }
     }
   ]
 }

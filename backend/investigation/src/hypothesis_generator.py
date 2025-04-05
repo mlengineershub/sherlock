@@ -129,13 +129,21 @@ Your response should be structured and detailed, focusing on technically plausib
         """
         prompt = self._create_prompt(request)
         
+        # Log the prompt being sent to the LLM
+        logger.info(f"Generating hypotheses with prompt: {prompt[:200]}...")
+        
         try:
             # Get structured output from the LLM
             response = self.bedrock_client.get_structured_output(
                 prompt=prompt,
                 response_model=HypothesisResponse,
-                model_id="mistral.mistral-7b-instruct-v0:2"
+                model_id="anthropic.claude-3-5-haiku-20241022-v1:0"
             )
+            
+            # Log the generated hypotheses
+            logger.info(f"Generated {len(response.hypotheses)} hypotheses:")
+            for i, hypothesis in enumerate(response.hypotheses):
+                logger.info(f"  Hypothesis {i+1}: {hypothesis.title} (confidence: {hypothesis.confidence})")
             
             return response
             

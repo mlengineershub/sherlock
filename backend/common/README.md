@@ -31,7 +31,7 @@ bedrock_client = BedrockClient()
 prompt = "Explain the concept of XSS attacks"
 response = bedrock_client.invoke_model(
     prompt=prompt,
-    model_id="mistral.mistral-7b-instruct-v0:2",
+    model_id="anthropic.claude-3-5-haiku-20241022-v1:0",
     max_tokens=1000
 )
 
@@ -48,7 +48,7 @@ prompt = "Describe the SQL injection vulnerability"
 vulnerability = bedrock_client.get_structured_output(
     prompt=prompt,
     response_model=SecurityVulnerability,
-    model_id="mistral.mistral-7b-instruct-v0:2"
+    model_id="anthropic.claude-3-5-haiku-20241022-v1:0"
 )
 ```
 

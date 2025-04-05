@@ -20,7 +20,7 @@ bedrock_client = boto3.client(
     region_name=region_name
 )
 # List all foundation models
-response = bedrock_client.list_foundation_models(byProvider="mistral")
+response = bedrock_client.list_foundation_models(byProvider="meta")
 # Print the model summaries
 print("=== Foundation Models ===")
 print("Model ID\tProvider\tName")

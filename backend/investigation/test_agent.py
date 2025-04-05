@@ -24,6 +24,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Set logging level for specific modules
+logging.getLogger("backend.common.src.utils.bedrock_client").setLevel(logging.DEBUG)
+logging.getLogger("backend.investigation.src.hypothesis_generator").setLevel(logging.DEBUG)
+
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description="Test the Investigation Agent")

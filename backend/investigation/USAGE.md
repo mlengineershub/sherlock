@@ -40,7 +40,7 @@ export AWS_DEFAULT_REGION=us-east-1
 
 Make sure your AWS account has access to the Claude models on AWS Bedrock:
 - Claude 3 Opus (anthropic.claude-3-opus-20240229-v1:0)
-- Claude 3 Haiku (mistral.mistral-7b-instruct-v0:2)
+- Claude 3 Haiku (anthropic.claude-3-5-haiku-20241022-v1:0)
 
 ## Running the Test Script
 
