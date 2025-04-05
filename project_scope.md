@@ -21,7 +21,6 @@ graph TD
     LogAnalyzer <--> LogProcessor[Log Processor]
     LogAnalyzer <--> RegexTool[Regex Tool]
     InvestigationAgent <--> TreeGenerator[Tree Generator]
-    InvestigationAgent <--> NVDTool
     PDFProcessor <--> S3Storage[S3 Storage]
     LogProcessor <--> S3Storage
     NVDTool <--> ExternalAPI[NVD External API]
