@@ -1,0 +1,18 @@
+graph TD
+    13dcd98e-0d39-472a-b079-fec116717e7a["Initial Breach (root)"]
+    class 13dcd98e-0d39-472a-b079-fec116717e7a root
+    bca7bd62-a5c3-45fa-8095-6783c46117db["Error generating hypothesis (attack_vector)"]
+    class bca7bd62-a5c3-45fa-8095-6783c46117db plausible
+    fe8343e4-1b0f-47c1-855b-8acb42d5a69f["Error generating hypothesis (attack_vector)"]
+    class fe8343e4-1b0f-47c1-855b-8acb42d5a69f attack_vector
+    13dcd98e-0d39-472a-b079-fec116717e7a --> bca7bd62-a5c3-45fa-8095-6783c46117db
+    bca7bd62-a5c3-45fa-8095-6783c46117db --> fe8343e4-1b0f-47c1-855b-8acb42d5a69f
+    %% Styling
+    classDef root fill:#FF5733,stroke:#333,stroke-width:2px
+    classDef vulnerability fill:#FFC300,stroke:#333,stroke-width:2px
+    classDef attack_vector fill:#C70039,stroke:#333,stroke-width:2px
+    classDef impact fill:#900C3F,stroke:#333,stroke-width:2px
+    classDef mitigation fill:#581845,stroke:#333,stroke-width:2px
+    classDef plausible fill:#33FF57,stroke:#333,stroke-width:2px
+    classDef implausible fill:#FF3333,stroke:#333,stroke-width:2px
+    classDef confirmed fill:#3366FF,stroke:#333,stroke-width:2px

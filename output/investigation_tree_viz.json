@@ -1,0 +1,42 @@
+{
+  "id": "5617eae2-a3f3-47d1-8037-225a548f03fe",
+  "title": "Initial Breach",
+  "type": "root",
+  "description": "Unauthorized access detected to the customer database server. The server logs show multiple failed login attempts followed by a successful login from an IP address not associated with our organization. The attacker appears to have exfiltrated customer data including names, email addresses, and hashed passwords.",
+  "status": "unverified",
+  "confidence": 0.8,
+  "evidence": [],
+  "metadata": {},
+  "children": [
+    {
+      "id": "658ff3ad-4ad1-4592-b271-88f880ca5004",
+      "title": "Fallback Hypothesis",
+      "type": "attack_vector",
+      "description": "This is a fallback hypothesis generated because Bedrock models are not accessible.",
+      "status": "plausible",
+      "confidence": 0.5,
+      "evidence": [
+        "No Bedrock access"
+      ],
+      "metadata": {
+        "reasoning": "This is a fallback response due to Bedrock access issues."
+      },
+      "children": [
+        {
+          "id": "eaa0126f-7a32-4cdc-83b2-2ef55022e86e",
+          "title": "Fallback Hypothesis",
+          "type": "attack_vector",
+          "description": "This is a fallback hypothesis generated because Bedrock models are not accessible.",
+          "status": "unverified",
+          "confidence": 0.5,
+          "evidence": [
+            "No Bedrock access"
+          ],
+          "metadata": {
+            "reasoning": "This is a fallback response due to Bedrock access issues."
+          }
+        }
+      ]
+    }
+  ]
+}
