@@ -2,12 +2,21 @@ import os
 from dotenv import load_dotenv
 from log_analyzer import LogAnalyzer
 import logging
+import argparse
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def main():
+    parser = argparse.ArgumentParser(description="Run Log Analyzer")
+    parser.add_argument('--verbose', action='store_true', help="Enable verbose output and intermediate step logging.")
+    args = parser.parse_args()
+
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+        logger.debug("Verbose mode enabled: showing intermediate steps during analysis")
+    
     # Load environment variables
     load_dotenv()
     
@@ -24,7 +33,11 @@ def main():
     # Initialize and run analyzer
     analyzer = LogAnalyzer(bucket, key)
     try:
-        analyzer.run_analysis('custom')
+        if args.verbose:
+            logger.debug("Running analysis in verbose mode")
+            analyzer.run_analysis('custom', verbose=True)
+        else:
+            analyzer.run_analysis('custom')
         logger.info("Analysis completed successfully")
     except Exception as e:
         logger.error(f"Analysis failed: {str(e)}")

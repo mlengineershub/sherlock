@@ -3,7 +3,7 @@ import logging
 from regex_pattern_matcher import RegexPatternMatcher
 import os
 import json
-
+import re
 class LogFormatDetector:
     def __init__(self, bedrock_client):
         self.bedrock = bedrock_client
@@ -25,6 +25,7 @@ class LogFormatDetector:
         )
         json_response = response["output"]["message"]["content"][0]["text"]
         print(f"JSON response before decoding: {json_response}")
+        json_response = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', json_response)
         try:
             return json.loads(json_response)
         except json.JSONDecodeError as e:
@@ -49,6 +50,7 @@ class LogAnalyzer:
         self.batch_size = batch_size
         self.log_format_detector = LogFormatDetector(self.bedrock)
         self.regex_matcher = RegexPatternMatcher()
+        self.security_insight_generator = DummySecurityInsightGenerator()
 
     def fetch_logs(self):
         response = self.s3_client.get_object(Bucket=self.s3_bucket, Key=self.s3_key)
@@ -71,37 +73,58 @@ class LogAnalyzer:
         )
         json_response = response["output"]["message"]["content"][0]["text"]
         print(f"JSON response before decoding: {json_response}")
+        while re.search(r'\\(?!["\\/bfnrtu])', json_response):
+            json_response = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', json_response)
         try:
             return json.loads(json_response)
         except json.JSONDecodeError as e:
             print(f"JSONDecodeError: {e}")
             raise
 
-    def analyze_logs(self):
+    def analyze_logs(self, verbose=False):
         logs = self.fetch_logs()
+        if verbose:
+            logger.debug("Fetched logs, snippet: %s", logs[:100])
         parsed_logs = self.log_parser(logs)
+        if verbose:
+            logger.debug("Parsed logs into %d lines", len(parsed_logs))
         
         # Initial format detection and pattern generation
         log_samples = "\n".join(parsed_logs[:5])
+        if verbose:
+            logger.debug("Log samples for format detection:\n%s", log_samples)
         format_detection = self.log_format_detector.detect_log_format(log_samples)
+        if verbose:
+            logger.debug("Format detection result: %s", format_detection)
         log_format = format_detection["format"]
         
-        # Filter and analyze using detected patterns
+        # Provide defaults if missing
+        if "regex_pattern" not in format_detection or not format_detection["regex_pattern"]:
+            if log_format == "apache":
+                format_detection["regex_pattern"] = r'^(?P<client_ip>\S+) \S+ \S+ \[(?P<request_time>[^\]]+)\] "(?P<request_method>\S+) (?P<request_url>\S+)[^"]*" (?P<http_status_code>\d{3}) (?P<content_length>\S+)( "(?P<referer>[^"]*)" "(?P<user_agent>[^"]*)")?'
+            else:
+                format_detection["regex_pattern"] = ""
+        if "security_patterns" not in format_detection:
+            format_detection["security_patterns"] = []
+        
         regex_pattern = format_detection["regex_pattern"]
         critical_entries = []
         
         for entry in parsed_logs:
+            if verbose:
+                logger.debug("Processing log entry: %s", entry)
             if not entry.strip():
                 continue
                 
             extracted_data = self.regex_matcher.match_pattern(entry, regex_pattern)
+            if verbose:
+                logger.debug("Matching result for entry: %s", extracted_data)
             if not extracted_data:
                 continue
                 
             # Only process logs with security patterns
             if any(pattern.lower() in entry.lower()
-                  for pattern in format_detection["security_patterns"]):
-                # Create base log entry
+                   for pattern in format_detection["security_patterns"]):
                 log_entry = {
                     "raw_log": entry,
                     "extracted_data": extracted_data,
@@ -112,7 +135,6 @@ class LogAnalyzer:
                     }
                 }
                 
-                # Add security analysis
                 security_analysis = self.security_insight_generator.generate_security_insights(log_entry)
                 if security_analysis.get("severity") in ["high", "medium"]:
                     log_entry.update(security_analysis)
@@ -135,9 +157,9 @@ class LogAnalyzer:
                     critical_information.append(entry)
         return critical_information
 
-    def run_analysis(self, log_type):
+    def run_analysis(self, log_type, verbose=False):
         """Main analysis pipeline with integrated format detection"""
-        critical_information = self.analyze_logs()
+        critical_information = self.analyze_logs(verbose)
         
         logger.info("\n=== Security Analysis Results ===")
         logger.info(f"Found {len(critical_information)} critical events")
@@ -155,3 +177,26 @@ class LogAnalyzer:
         logger.info("\n=== Recommended Actions ===")
         for i, action in enumerate(recommendations.get("recommendations", []), 1):
             logger.info(f"{i}. {action}")
+
+class DummySecurityInsightGenerator:
+    def generate_security_insights(self, log_entry):
+        if "error" in log_entry["raw_log"].lower():
+            return {
+                "severity": "high",
+                "potential_threat": "Detected error in log",
+                "recommended_action": "Investigate immediately"
+            }
+        return {"severity": "low"}
+    
+    def generate_summary_recommendations(self, critical_entries):
+        if not critical_entries:
+            return {
+                "summary": "No critical events found",
+                "recommendations": [],
+                "critical_issues": []
+            }
+        return {
+            "summary": "Critical events detected",
+            "recommendations": ["Review error logs"],
+            "critical_issues": ["Errors found"]
+        }
