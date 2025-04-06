@@ -1,0 +1,7 @@
+README.md
+pyproject.toml
+sherlock.egg-info/PKG-INFO
+sherlock.egg-info/SOURCES.txt
+sherlock.egg-info/dependency_links.txt
+sherlock.egg-info/requires.txt
+sherlock.egg-info/top_level.txt
