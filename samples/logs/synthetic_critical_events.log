@@ -1,0 +1,14 @@
+203.0.113.45 - - [06/Apr/2025:02:14:01 +0000] "GET /admin/login HTTP/1.1" 200 532
+203.0.113.45 - - [06/Apr/2025:02:14:05 +0000] "POST /admin/login HTTP/1.1" 401 721
+203.0.113.45 - - [06/Apr/2025:02:14:08 +0000] "POST /admin/login HTTP/1.1" 401 721
+203.0.113.45 - - [06/Apr/2025:02:14:11 +0000] "POST /admin/login HTTP/1.1" 401 721
+203.0.113.45 - - [06/Apr/2025:02:14:13 +0000] "POST /admin/login HTTP/1.1" 200 833
+203.0.113.45 - - [06/Apr/2025:02:14:16 +0000] "GET /admin/panel HTTP/1.1" 200 1456
+192.168.1.5 - - [06/Apr/2025:02:14:19 +0000] "GET /etc/passwd HTTP/1.1" 403 890
+198.51.100.72 - - [06/Apr/2025:02:14:22 +0000] "GET /api/user?id=1' OR '1'='1 HTTP/1.1" 500 1032
+198.51.100.72 - - [06/Apr/2025:02:14:23 +0000] "GET /api/user?id=1' UNION SELECT password FROM users-- HTTP/1.1" 500 1045
+10.0.0.10 - - [06/Apr/2025:02:14:26 +0000] "GET /wp-admin/setup-config.php HTTP/1.1" 404 321
+203.0.113.101 - - [06/Apr/2025:02:14:29 +0000] "PUT /uploads/webshell.php HTTP/1.1" 200 946
+203.0.113.101 - - [06/Apr/2025:02:14:33 +0000] "GET /uploads/webshell.php?cmd=ls HTTP/1.1" 200 212
+192.0.2.50 - - [06/Apr/2025:02:14:36 +0000] "OPTIONS /admin/ HTTP/1.1" 200 234
+192.0.2.50 - - [06/Apr/2025:02:14:38 +0000] "TRACE / HTTP/1.1" 200 112
