@@ -14,9 +14,12 @@ def main():
     args = parser.parse_args()
 
     if args.verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)
+        for handler in root_logger.handlers:
+            handler.setLevel(logging.DEBUG)
         logger.debug("Verbose mode enabled: showing intermediate steps during analysis")
-    
+        
     # Load environment variables
     load_dotenv()
     

@@ -25,7 +25,8 @@ class LogFormatDetector:
         )
         json_response = response["output"]["message"]["content"][0]["text"]
         print(f"JSON response before decoding: {json_response}")
-        json_response = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', json_response)
+        while re.search(r'\\(?!["\\/bfnrtu])', json_response):
+            json_response = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', json_response)
         try:
             return json.loads(json_response)
         except json.JSONDecodeError as e:
@@ -53,9 +54,14 @@ class LogAnalyzer:
         self.security_insight_generator = DummySecurityInsightGenerator()
 
     def fetch_logs(self):
-        response = self.s3_client.get_object(Bucket=self.s3_bucket, Key=self.s3_key)
-        logs = response['Body'].read().decode('utf-8')
-        return logs
+        if os.path.exists(self.s3_key) and self.s3_key.endswith(".log"):
+            with open(self.s3_key, "r", encoding="utf-8") as f:
+                logs = f.read()
+            return logs
+        else:
+            response = self.s3_client.get_object(Bucket=self.s3_bucket, Key=self.s3_key)
+            logs = response['Body'].read().decode('utf-8')
+            return logs
 
     def log_parser(self, logs):
         return logs.splitlines()
