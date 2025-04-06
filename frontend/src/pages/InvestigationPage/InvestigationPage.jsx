@@ -1,6 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Tree from 'react-d3-tree';
 import InvestigationNode from './InvestigationNode'; // Import the custom node
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import './InvestigationPage.css';
 import {
   startInvestigation,
@@ -23,6 +25,11 @@ function InvestigationPage() {
   const [showReport, setShowReport] = useState(false);
   const [report, setReport] = useState(null);
   const [translate, setTranslate] = useState({ x: window.innerWidth / 2, y: 80 });
+  const [reportGraphKey, setReportGraphKey] = useState(0); // Key for report graph rendering
+  const [pdfGenerating, setPdfGenerating] = useState(false);
+  
+  // Create refs for PDF generation
+  const reportContentRef = useRef(null);
 
   // Handle window resize to keep the tree centered
   useEffect(() => {
@@ -204,6 +211,178 @@ function InvestigationPage() {
     setSelectedNode(null);
     setNodeDetails(null);
   }, []);
+  
+  // Handle downloading the report
+  const handleDownloadReport = useCallback(() => {
+    if (!report) return;
+    
+    // Create a formatted report object with all data
+    const formattedReport = {
+      title: report.title,
+      timestamp: report.timestamp,
+      summary: report.summary,
+      findings: report.findings,
+      recommendations: report.recommendations,
+      graph_data: report.graph_data
+    };
+    
+    // Convert to JSON string with pretty formatting
+    const reportJson = JSON.stringify(formattedReport, null, 2);
+    
+    // Create a blob and download link
+    const blob = new Blob([reportJson], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary link element and trigger download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `investigation-report-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [report]);
+  
+  // Handle downloading the report as PDF
+  const handleDownloadPDF = useCallback(async () => {
+    if (!report || !reportContentRef.current) return;
+    
+    try {
+      setPdfGenerating(true);
+      
+      // Create a PDF document
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      // Set title
+      pdf.setFontSize(18);
+      pdf.text(report.title, 20, 20);
+      
+      // Add timestamp
+      pdf.setFontSize(10);
+      pdf.text(`Generated: ${new Date(report.timestamp).toLocaleString()}`, 20, 30);
+      
+      // Add summary
+      pdf.setFontSize(14);
+      pdf.text('Summary', 20, 40);
+      pdf.setFontSize(10);
+      
+      // Split summary text to fit on page
+      const summaryLines = pdf.splitTextToSize(report.summary, 170);
+      pdf.text(summaryLines, 20, 50);
+      
+      let yPosition = 50 + (summaryLines.length * 5);
+      
+      // Capture the graph visualization
+      if (report.graph_data) {
+        try {
+          const graphElement = reportContentRef.current.querySelector('.report-graph-container');
+          if (graphElement) {
+            // Add some spacing
+            yPosition += 10;
+            
+            // Add graph title
+            pdf.setFontSize(14);
+            pdf.text('Investigation Graph', 20, yPosition);
+            yPosition += 10;
+            
+            // Capture the graph as an image
+            const canvas = await html2canvas(graphElement, {
+              scale: 1,
+              logging: false,
+              useCORS: true
+            });
+            
+            // Add the graph image to the PDF
+            const graphImgData = canvas.toDataURL('image/png');
+            const imgWidth = 170;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            
+            // Check if we need a new page for the graph
+            if (yPosition + imgHeight > 280) {
+              pdf.addPage();
+              yPosition = 20;
+            }
+            
+            pdf.addImage(graphImgData, 'PNG', 20, yPosition, imgWidth, imgHeight);
+            yPosition += imgHeight + 10;
+          }
+        } catch (graphError) {
+          console.error('Error capturing graph:', graphError);
+        }
+      }
+      
+      // Check if we need a new page for findings
+      if (yPosition > 250) {
+        pdf.addPage();
+        yPosition = 20;
+      }
+      
+      // Add findings
+      pdf.setFontSize(14);
+      pdf.text('Key Findings', 20, yPosition);
+      yPosition += 10;
+      
+      // Add each finding
+      for (const finding of report.findings) {
+        pdf.setFontSize(12);
+        pdf.text(finding.title, 20, yPosition);
+        yPosition += 6;
+        
+        pdf.setFontSize(10);
+        const descLines = pdf.splitTextToSize(finding.description, 170);
+        pdf.text(descLines, 20, yPosition);
+        yPosition += (descLines.length * 5) + 5;
+        
+        pdf.text(`Status: ${finding.status} | Confidence: ${(finding.confidence * 100).toFixed(0)}%`, 20, yPosition);
+        yPosition += 10;
+        
+        // Check if we need a new page
+        if (yPosition > 270 && report.findings.indexOf(finding) < report.findings.length - 1) {
+          pdf.addPage();
+          yPosition = 20;
+        }
+      }
+      
+      // Check if we need a new page for recommendations
+      if (yPosition > 250) {
+        pdf.addPage();
+        yPosition = 20;
+      }
+      
+      // Add recommendations
+      pdf.setFontSize(14);
+      pdf.text('Recommendations', 20, yPosition);
+      yPosition += 10;
+      
+      // Add each recommendation
+      pdf.setFontSize(10);
+      for (const rec of report.recommendations) {
+        const recLines = pdf.splitTextToSize(`• ${rec}`, 170);
+        pdf.text(recLines, 20, yPosition);
+        yPosition += (recLines.length * 5) + 5;
+        
+        // Check if we need a new page
+        if (yPosition > 270 && report.recommendations.indexOf(rec) < report.recommendations.length - 1) {
+          pdf.addPage();
+          yPosition = 20;
+        }
+      }
+      
+      // Save the PDF
+      pdf.save(`investigation-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    } finally {
+      setPdfGenerating(false);
+    }
+  }, [report]);
 
   // Define properties for the foreignObject wrapper required by react-d3-tree
   const foreignObjectProps = { width: 280, height: 240, x: -140, y: -25 }; // Increased height for better button visibility
@@ -211,7 +390,7 @@ function InvestigationPage() {
   return (
     <div className="investigation-page">
       <header className="app-header">
-        <h1>SecAI Investigation Agent 🕵️</h1>
+        <h1>Sherlock 🕵️</h1>
         {treeData && (
           <button
             className="report-button"
@@ -332,12 +511,56 @@ function InvestigationPage() {
         <div className="modal-overlay">
           <div className="report-modal">
             <button className="modal-close" onClick={handleCloseReport}>×</button>
-            <h2>{report.title}</h2>
-            <div className="report-content">
+            <div className="report-header">
+              <h2>{report.title}</h2>
+              <div className="download-buttons">
+                <button
+                  className="download-button json"
+                  onClick={handleDownloadReport}
+                  title="Download report as JSON"
+                  disabled={pdfGenerating}
+                >
+                  Download JSON
+                </button>
+                <button
+                  className="download-button pdf"
+                  onClick={handleDownloadPDF}
+                  title="Download report as PDF with graph visualization"
+                  disabled={pdfGenerating}
+                >
+                  {pdfGenerating ? 'Generating PDF...' : 'Download PDF'}
+                </button>
+              </div>
+            </div>
+            <div className="report-content" ref={reportContentRef}>
               <h3>Summary</h3>
               <p className="report-summary">{report.summary}</p>
               
-              <h3>Findings</h3>
+              {report.graph_data && (
+                <div className="report-graph-section">
+                  <h3>Investigation Graph</h3>
+                  <div className="report-graph-container">
+                    <Tree
+                      data={report.graph_data}
+                      orientation="vertical"
+                      pathFunc="step"
+                      translate={{ x: 300, y: 50 }}
+                      separation={{ siblings: 2, nonSiblings: 2.5 }}
+                      nodeSize={{ x: 200, y: 150 }}
+                      renderCustomNodeElement={(rd3tProps) => (
+                        <InvestigationNode
+                          {...rd3tProps}
+                          foreignObjectProps={{ width: 180, height: 120, x: -90, y: -25 }}
+                          isSelected={false}
+                        />
+                      )}
+                      key={reportGraphKey}
+                    />
+                  </div>
+                </div>
+              )}
+              
+              <h3>Key Findings</h3>
               <div className="findings-list">
                 {report.findings.map((finding, index) => (
                   <div key={index} className="finding-item">
