@@ -55,7 +55,7 @@ Return 10-15 comma-separated keywords sorted by importance:"""
         }]
         
         response = self.bedrock.converse(
-            modelId="anthropic.claude-3-5-haiku-20241022-v1:0",
+            modelId="mistral.mistral-7b-instruct-v0:2",
             messages=conversation,
             inferenceConfig={"maxTokens": 512, "temperature": 0.5, "topP": 0.9}
         )
