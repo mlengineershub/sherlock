@@ -24,8 +24,8 @@ def main():
     load_dotenv()
     
     # Get S3 bucket and key from environment
-    bucket = os.getenv('TEST_S3_BUCKET')
-    key = os.getenv('TEST_S3_KEY')
+    bucket = "mysherlockbucket"
+    key = "synthetic_critical_events.log"
     
     if not bucket or not key:
         logger.error("Missing S3 bucket or key in environment variables")
