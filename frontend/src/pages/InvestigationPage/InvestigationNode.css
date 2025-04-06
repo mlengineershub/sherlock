@@ -1,0 +1,186 @@
+/* Investigation Node Styling */
+.investigation-node {
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+  border-top: 4px solid #6c757d;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.investigation-node:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.investigation-node.selected {
+  box-shadow: 0 0 0 2px #4a6bff, 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.investigation-node.locked {
+  opacity: 0.8;
+  background-color: #f8f9fa;
+}
+
+.node-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.node-type {
+  font-size: 0.7rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.node-confidence {
+  font-size: 0.7rem;
+  color: #495057;
+  font-weight: 600;
+}
+
+.node-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #212529;
+  line-height: 1.3;
+}
+
+.node-description {
+  font-size: 0.8rem;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+}
+
+.node-reasoning {
+  font-size: 0.7rem;
+  color: #6c757d;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+  background-color: #f8f9fa;
+  padding: 0.4rem;
+  border-radius: 4px;
+  border-left: 2px solid #dee2e6;
+  max-height: 40px;
+  overflow: hidden;
+}
+
+.node-buttons-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+}
+
+.node-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.7rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Tooltip styles */
+.action-button[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  z-index: 10;
+  margin-bottom: 5px;
+}
+
+.action-button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+/* Removed generate button style as it's no longer used */
+
+.action-button.plausible {
+  background-color: #28a745;
+  color: white;
+}
+
+.action-button.implausible {
+  background-color: #dc3545;
+  color: white;
+}
+
+.action-button.details {
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  padding: 0.4rem 0.6rem;
+}
+
+.action-button.details:hover {
+  background-color: #5a52e0;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.locked-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.7rem;
+  border-bottom-left-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+}
+
+.lock-icon {
+  font-size: 0.8rem;
+}
