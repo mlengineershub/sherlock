@@ -9,8 +9,8 @@ import boto3
 import os
 from dotenv import load_dotenv
 
-# Add project root to Python path
-sys.path.append(str(Path(__file__).parent.parent))
+from backend.investigation.src.nvd_client import NVDClient
+
 
 # Initialize Bedrock client
 load_dotenv()
@@ -21,7 +21,6 @@ bedrock_client = boto3.client(
     aws_session_token=os.getenv('AWS_SESSION_TOKEN'),
     region_name=os.getenv('AWS_DEFAULT_REGION')
 )
-from investigation.src.nvd_client import NVDClient
 
 logger = logging.getLogger(__name__)
 
@@ -104,21 +103,14 @@ Return 10-15 comma-separated keywords sorted by importance:"""
         )
         return filtered[:20]
 
-    def generate_summary_prompt(self, system_desc: str, vulns: List[dict],
-                              weak_points: List[str], recommendations: List[str]) -> str:
+    def generate_summary_prompt(self, system_desc: str, vulns: List[dict]) -> str:
         return f"""Generate a comprehensive vulnerability analysis report based on the following data:
 
 System Description:
 {system_desc}
 
 Identified Vulnerabilities:
-{vulns}  
-
-Key Security Weak Points:
-{weak_points}
-
-Recommended Actions:
-{recommendations}
+{vulns}
 
 Structure the report with these sections:
 1. System Overview - Analyze the described components and architecture
@@ -129,27 +121,13 @@ Structure the report with these sections:
 Use markdown formatting and include specific CVE references."""
     
     def analyze_vulnerabilities(self, vulns: List[dict]) -> VulnerabilityReport:
-        weak_points = set()
-        recommendations = []
-        
-        for vuln in vulns:
-            # Analyze weak points from vulnerability data
-            description = vuln['cve']['descriptions'][0]['value'].lower()
-            if "configuration" in description:
-                weak_points.add("System Configuration")
-            if "authentication" in description:
-                recommendations.append("Implement multi-factor authentication")
-            if "redis" in description:
-                weak_points.add("Redis Cache Security")
                 
         # Generate detailed report summary
         conversation = [{
             "role": "user",
             "content": [{"text": self.generate_summary_prompt(
                 system_desc="Web application using Django 3.2 with PostgreSQL and Redis",
-                vulns=vulns,
-                weak_points=list(weak_points),
-                recommendations=recommendations
+                vulns=vulns
             )}]
         }]
         
@@ -163,9 +141,7 @@ Use markdown formatting and include specific CVE references."""
         return VulnerabilityReport(
             system_summary=summary,
             keywords=[],
-            vulnerabilities=vulns,
-            weak_points=list(weak_points),
-            recommendations=list(set(recommendations))
+            vulnerabilities=vulns
         )
 
     def process(self, system_description: str) -> VulnerabilityReport:
