@@ -31,7 +31,7 @@ logging.getLogger("backend.investigation.src.hypothesis_generator").setLevel(log
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description="Test the Investigation Agent")
-    
+
     parser.add_argument(
         "--breach-info",
         type=str,

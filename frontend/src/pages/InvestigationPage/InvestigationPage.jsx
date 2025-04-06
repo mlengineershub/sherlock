@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Tree from 'react-d3-tree';
 import InvestigationNode from './InvestigationNode'; // Import the custom node
 import jsPDF from 'jspdf';
@@ -15,6 +16,7 @@ import {
 
 
 function InvestigationPage() {
+  const navigate = useNavigate();
   const [breachInfo, setBreachInfo] = useState('');
   const [treeData, setTreeData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -529,6 +531,13 @@ function InvestigationPage() {
                   disabled={pdfGenerating}
                 >
                   {pdfGenerating ? 'Generating PDF...' : 'Download PDF'}
+                </button>
+                <button
+                  className="remediation-button"
+                  onClick={() => navigate('/remediation')}
+                  title="Plan remediation based on this report"
+                >
+                  Begin Remediation
                 </button>
               </div>
             </div>
