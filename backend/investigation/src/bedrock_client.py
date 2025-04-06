@@ -32,7 +32,7 @@ class BedrockClient:
     def invoke_model(
         self, 
         prompt: str, 
-        model_id: str = "mistral.mistral-7b-instruct-v0:2",
+        model_id: str = "anthropic.claude-3-5-haiku-20241022-v1:0",
         max_tokens: int = 1000,
         temperature: float = 0.7,
         top_p: float = 0.999,

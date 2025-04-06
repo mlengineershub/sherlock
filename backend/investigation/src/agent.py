@@ -26,6 +26,7 @@ class InvestigationReport(BaseModel):
     summary: str
     findings: List[Dict] = Field(default_factory=list)
     recommendations: List[str] = Field(default_factory=list)
+    graph_data: Optional[Dict] = None
     timestamp: str = Field(default_factory=lambda: datetime.now().isoformat())
 
 
@@ -294,12 +295,16 @@ class InvestigationAgent:
             }
             findings.append(finding)
         
+        # Get the graph visualization data
+        graph_data = self.export_tree_visualization()
+        
         # Create the report
         report = InvestigationReport(
             title=f"Investigation Report: {self.current_tree.name}",
             summary=self._generate_summary(),
             findings=findings,
-            recommendations=self._generate_recommendations()
+            recommendations=self._generate_recommendations(),
+            graph_data=graph_data
         )
         
         # Save the report if output path is provided
@@ -397,7 +402,7 @@ Each recommendation should be a single, concise sentence.
             # Generate recommendations using the LLM
             response = self.bedrock_client.invoke_model(
                 prompt=prompt,
-                model_id="mistral.mistral-7b-instruct-v0:2",
+                model_id="anthropic.claude-3-5-haiku-20241022-v1:0",
                 max_tokens=500
             )
             

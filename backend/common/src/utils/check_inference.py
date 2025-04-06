@@ -20,7 +20,7 @@ bedrock_client = boto3.client(
     region_name=region_name
 )
 # Set the model ID, e.g., Mistral Large.
-model_id = "mistral.mistral-7b-instruct-v0:2"
+model_id = "mistral.mistral-large-2402-v1:0"
 # Start a conversation with the user message.
 user_message = "Describe the purpose of a 'hello world' program in one line."
 conversation = [

@@ -1,0 +1,124 @@
+.perspectives-panel {
+  margin: 20px 0;
+  width: 100%;
+}
+
+.perspectives-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.perspective-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: all 0.3s ease;
+  border-left: 4px solid #ccc;
+}
+
+.perspective-card.selected {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Perspective type colors */
+.perspective-card.expert {
+  border-left-color: #4285f4; /* Blue */
+}
+
+.perspective-card.attacker {
+  border-left-color: #ea4335; /* Red */
+}
+
+.perspective-card.business {
+  border-left-color: #34a853; /* Green */
+}
+
+.perspective-card.compliance {
+  border-left-color: #fbbc05; /* Yellow */
+}
+
+.perspective-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.perspective-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.perspective-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.perspective-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.perspective-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.perspective-actions button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.accept-button:hover {
+  background-color: #e6f4ea;
+  border-color: #34a853;
+}
+
+.reject-button:hover {
+  background-color: #fce8e6;
+  border-color: #ea4335;
+}
+
+.accept-button.active {
+  background-color: #34a853;
+  color: white;
+  border-color: #34a853;
+}
+
+.reject-button.active {
+  background-color: #ea4335;
+  color: white;
+  border-color: #ea4335;
+}
+
+.perspective-content {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .perspectives-grid {
+    grid-template-columns: 1fr;
+  }
+}

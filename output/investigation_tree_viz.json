@@ -1,5 +1,5 @@
 {
-  "id": "5617eae2-a3f3-47d1-8037-225a548f03fe",
+  "id": "cfda8a7f-5366-4c52-a02a-5a8cb531ea29",
   "title": "Initial Breach",
   "type": "root",
   "description": "Unauthorized access detected to the customer database server. The server logs show multiple failed login attempts followed by a successful login from an IP address not associated with our organization. The attacker appears to have exfiltrated customer data including names, email addresses, and hashed passwords.",
@@ -9,34 +9,120 @@
   "metadata": {},
   "children": [
     {
-      "id": "658ff3ad-4ad1-4592-b271-88f880ca5004",
-      "title": "Fallback Hypothesis",
+      "id": "b1946ae0-4e45-4c5e-9ac5-a0dffd5e895e",
+      "title": "Password Hash Cracking Attempt",
       "type": "attack_vector",
-      "description": "This is a fallback hypothesis generated because Bedrock models are not accessible.",
+      "description": "The attacker will attempt to crack the stolen password hashes to gain additional authentication credentials and potentially expand access to other systems",
       "status": "plausible",
-      "confidence": 0.5,
+      "confidence": 0.85,
       "evidence": [
-        "No Bedrock access"
+        "Exfiltrated hashed password data",
+        "Common post-breach reconnaissance technique",
+        "High potential for lateral movement"
       ],
       "metadata": {
-        "reasoning": "This is a fallback response due to Bedrock access issues."
+        "reasoning": "With customer password hashes obtained, attackers typically use offline cracking techniques like dictionary attacks, rainbow tables, or GPU-accelerated brute force to recover plaintext credentials. Weak or reused passwords increase the likelihood of successful cracking."
       },
       "children": [
         {
-          "id": "eaa0126f-7a32-4cdc-83b2-2ef55022e86e",
-          "title": "Fallback Hypothesis",
+          "id": "31edd307-cc0c-471d-8a5f-b0af7a29e2e3",
+          "title": "Credential Stuffing and Password Cracking",
           "type": "attack_vector",
-          "description": "This is a fallback hypothesis generated because Bedrock models are not accessible.",
-          "status": "unverified",
-          "confidence": 0.5,
+          "description": "The attacker uses offline password cracking techniques like rainbow tables, dictionary attacks, or GPU-accelerated brute force to crack the stolen password hashes, targeting weak or reused credentials.",
+          "status": "confirmed",
+          "confidence": 0.85,
           "evidence": [
-            "No Bedrock access"
+            "Large-scale data breaches often involve password hash cracking",
+            "Many users reuse passwords across multiple platforms",
+            "Advanced password cracking tools are readily available"
           ],
           "metadata": {
-            "reasoning": "This is a fallback response due to Bedrock access issues."
+            "reasoning": "With stolen password hashes, attackers can systematically attempt to recover plaintext passwords using computational techniques, potentially revealing credentials that grant access to other systems or user accounts."
+          }
+        },
+        {
+          "id": "4d053a60-6b98-4e9d-9c3b-00575497ce64",
+          "title": "Lateral Movement via Compromised Credentials",
+          "type": "attack_vector",
+          "description": "After successfully cracking some password hashes, the attacker uses the recovered credentials to gain unauthorized access to additional internal systems, escalating privileges and expanding their network foothold.",
+          "status": "unverified",
+          "confidence": 0.75,
+          "evidence": [
+            "Common post-breach technique for expanding access",
+            "Enterprises often have interconnected authentication systems",
+            "Password reuse is prevalent across organizations"
+          ],
+          "metadata": {
+            "reasoning": "Successfully cracked credentials can provide pathways to additional systems, especially if users have similar passwords across different platforms or if single sign-on mechanisms are in place."
           }
         }
       ]
+    },
+    {
+      "id": "3d397594-e8d7-4b87-8aa4-3c8bd9a9cdc9",
+      "title": "Customer Account Takeover Campaign",
+      "type": "impact",
+      "description": "Leveraging the stolen customer data, the attacker will attempt to conduct large-scale phishing or credential stuffing attacks to compromise individual user accounts",
+      "status": "plausible",
+      "confidence": 0.75,
+      "evidence": [
+        "Personal customer information available",
+        "Email addresses in the dataset",
+        "High economic motivation for identity theft"
+      ],
+      "metadata": {
+        "reasoning": "The combination of names and email addresses provides an ideal dataset for targeted phishing campaigns. Attackers can craft convincing emails attempting to trick users into revealing additional credentials or installing malware."
+      },
+      "children": [
+        {
+          "id": "b4a9cdfa-b3e0-459e-953a-cb6a90bbafd4",
+          "title": "Dark Web Data Monetization",
+          "type": "attack_vector",
+          "description": "The attacker plans to sell the exfiltrated customer database on underground cybercrime forums, potentially targeting financial or identity theft markets",
+          "status": "unverified",
+          "confidence": 0.85,
+          "evidence": [
+            "High volume of customer PII data obtained",
+            "Presence of email addresses and hashed passwords",
+            "Known patterns of cybercriminal marketplaces"
+          ],
+          "metadata": {
+            "reasoning": "Stolen customer databases with personal information are valuable commodities in cybercrime ecosystems. The combination of names, emails, and password hashes provides sufficient data for potential identity theft or account compromise schemes."
+          }
+        },
+        {
+          "id": "0fd883a1-b699-4fff-bb79-2eb73852fdc6",
+          "title": "Targeted Spear Phishing Campaign",
+          "type": "attack_vector",
+          "description": "Using the stolen customer data, the attacker will craft highly personalized phishing emails targeting specific high-value individuals within the compromised database",
+          "status": "unverified",
+          "confidence": 0.75,
+          "evidence": [
+            "Comprehensive customer information available",
+            "Presence of email addresses in exfiltrated data",
+            "Increasing trend of sophisticated social engineering attacks"
+          ],
+          "metadata": {
+            "reasoning": "With detailed customer information, attackers can create convincing, personalized phishing emails that appear legitimate and increase the likelihood of successful social engineering attacks. The targeted approach allows for more precise manipulation of potential victims."
+          }
+        }
+      ]
+    },
+    {
+      "id": "223c8da1-b77a-44ba-92eb-b79706933342",
+      "title": "Infrastructure Reconnaissance",
+      "type": "attack_vector",
+      "description": "The attacker will use the initial database access as a foothold to perform broader network reconnaissance and identify additional vulnerable systems",
+      "status": "confirmed",
+      "confidence": 0.8,
+      "evidence": [
+        "Successful database server penetration",
+        "Potential internal network access",
+        "Typical advanced persistent threat methodology"
+      ],
+      "metadata": {
+        "reasoning": "After gaining initial access, sophisticated attackers typically conduct systematic exploration of the network, mapping potential lateral movement paths, identifying privileged accounts, and searching for additional high-value targets."
+      }
     }
   ]
 }

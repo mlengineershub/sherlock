@@ -1,0 +1,136 @@
+.roadmap-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.roadmap-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.roadmap-header {
+  background-color: #6200ea;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.roadmap-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.roadmap-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.roadmap-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  border-left: 4px solid #ccc;
+}
+
+.roadmap-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.roadmap-section.immediate {
+  border-left-color: #ea4335; /* Red for immediate */
+  background-color: #fef7f6;
+}
+
+.roadmap-section.short-term {
+  border-left-color: #fbbc05; /* Yellow for short-term */
+  background-color: #fff8e6;
+}
+
+.roadmap-section.medium-term {
+  border-left-color: #34a853; /* Green for medium-term */
+  background-color: #e6f4ea;
+}
+
+.section-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #444;
+  white-space: pre-line; /* Preserve line breaks */
+}
+
+.roadmap-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.export-btn {
+  background-color: #34a853;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.export-btn:hover {
+  background-color: #2d9348;
+}
+
+.close-btn {
+  background-color: #f1f3f4;
+  color: #444;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #e8eaed;
+}
+
+/* The close button in the header */
+.roadmap-header .close-btn {
+  background: none;
+  color: white;
+  font-size: 24px;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roadmap-header .close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}

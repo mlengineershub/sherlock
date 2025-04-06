@@ -1,0 +1,91 @@
+.board-node {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin: 10px;
+  width: 220px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 4px solid #ccc;
+}
+
+.board-node:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.board-node.selected {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-color: #4a6bff;
+}
+
+/* Node types */
+.board-node.type-vulnerability {
+  border-left-color: #ea4335; /* Red */
+}
+
+.board-node.type-attack-vector {
+  border-left-color: #fbbc05; /* Yellow */
+}
+
+.board-node.type-impact {
+  border-left-color: #34a853; /* Green */
+}
+
+.board-node.type-threat {
+  border-left-color: #4285f4; /* Blue */
+}
+
+/* Node statuses */
+.board-node.status-confirmed {
+  background-color: #e6f4ea; /* Light green */
+}
+
+.board-node.status-plausible {
+  background-color: #e8f0fe; /* Light blue */
+}
+
+.board-node.status-implausible {
+  background-color: #fce8e6; /* Light red */
+}
+
+.board-node.status-unverified {
+  background-color: #f8f9fa; /* Light gray */
+}
+
+.node-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.node-title {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+}
+
+.node-confidence {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #333;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.node-type {
+  display: inline-block;
+  font-size: 12px;
+  color: #666;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: capitalize;
+}
